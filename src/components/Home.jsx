@@ -6,17 +6,21 @@ import p5 from "p5";
 import { useRecoilValue } from "recoil";
 import { colourTheme } from "../cart/Theme";
 
-export const Home = ({}) => {
+export const Home = () => {
     const currentTheme = useRecoilValue(colourTheme);
     const canvasRef = useRef(null);
     const videoRef = useRef(null);
     let detector = null;
     let poses = [];
     let skeleton = true;
+
     let pushUps = 0;
     let squats = 0;
+    let bicepCurls = 0;
+
     let isPushUpDown = false;
     let isSquatDown = false;
+    let isCurlUp = false;
 
     useEffect(() => {
         const sketch = (p) => {
@@ -27,6 +31,7 @@ export const Home = ({}) => {
                 await tf.setBackend("webgl");
                 console.log("Using TensorFlow backend:", tf.getBackend());
 
+                // Set canvas size
                 p.createCanvas(640, 480);
                 video = p.createCapture(p.VIDEO);
                 video.size(640, 480);
@@ -47,6 +52,17 @@ export const Home = ({}) => {
                 } catch (error) {
                     console.error("Error loading MoveNet model:", error);
                 }
+
+                // Resize canvas to match window size
+                const handleResize = () => {
+                    p.resizeCanvas(window.innerWidth, window.innerHeight);
+                };
+                window.addEventListener("resize", handleResize);
+
+                // Cleanup
+                return () => {
+                    window.removeEventListener("resize", handleResize);
+                };
             };
 
             p.draw = () => {
@@ -58,9 +74,7 @@ export const Home = ({}) => {
                     p.image(video, 0, 0, video.width, video.height);
 
                     drawKeypoints(p);
-                    if (skeleton) {
-                        drawSkeleton(p);
-                    }
+                    if (skeleton) drawSkeleton(p);
 
                     p.fill(255);
                     p.strokeWeight(2);
@@ -71,12 +85,15 @@ export const Home = ({}) => {
 
                     p.text(`Push-ups: ${pushUps}`, 20, 30);
                     p.text(`Squats: ${squats}`, 20, 60);
+                    p.text(`Bicep Curls: ${bicepCurls}`, 20, 90);
 
-                    if (poses.length > 0) {
-                        p.text("Skeleton Detected", 20, 90);
-                    } else {
-                        p.text("Detecting Pose...", 20, 90);
-                    }
+                    p.text(
+                        poses.length > 0
+                            ? "Skeleton Detected"
+                            : "Detecting Pose...",
+                        20,
+                        120
+                    );
                 }
             };
 
@@ -90,6 +107,7 @@ export const Home = ({}) => {
                             poses = estimation;
                             detectPushUp();
                             detectSquat();
+                            detectBicepCurl();
                         }
                     } catch (error) {
                         console.error("Error estimating poses:", error);
@@ -194,6 +212,37 @@ export const Home = ({}) => {
                 }
             };
 
+            const detectBicepCurl = () => {
+                if (poses.length > 0) {
+                    const keypoints = poses[0].keypoints;
+                    const leftShoulder = keypoints[5];
+                    const leftElbow = keypoints[7];
+                    const leftWrist = keypoints[9];
+
+                    if (
+                        leftShoulder.score > 0.5 &&
+                        leftElbow.score > 0.5 &&
+                        leftWrist.score > 0.5
+                    ) {
+                        const leftElbowAngle = calculateAngle(
+                            leftShoulder.x,
+                            leftShoulder.y,
+                            leftElbow.x,
+                            leftElbow.y,
+                            leftWrist.x,
+                            leftWrist.y
+                        );
+
+                        if (leftElbowAngle < 60) {
+                            isCurlUp = true;
+                        } else if (isCurlUp && leftElbowAngle > 150) {
+                            isCurlUp = false;
+                            bicepCurls++;
+                        }
+                    }
+                }
+            };
+
             const calculateAngle = (x1, y1, x2, y2, x3, y3) => {
                 const angle =
                     Math.atan2(y3 - y2, x3 - x2) - Math.atan2(y1 - y2, x1 - x2);
@@ -242,15 +291,14 @@ export const Home = ({}) => {
 
     return (
         <div
-            className={`w-full h-dvh flex p-3 font-mono justify-center items-start text-xl gap-2 font-semibold shadow-md ${
+            className={`grid grid-rows-1 grid-cols-1 p-3 font-mono text-xl gap-4 font-semibold shadow-md ${
                 currentTheme === "dark"
                     ? "bg-black text-white"
                     : "bg-amber-50 text-black"
             }`}
         >
-            <div className="flex flex-col items-center gap-4 hover:shadow-amber-800">
-                <h1 className="text-xl">Form Detection</h1>
-
+            <h1 className="text-xl text-center font-bold">Form Detection</h1>
+            <div className="flex justify-center items-center">
                 <div ref={canvasRef}></div>
             </div>
         </div>

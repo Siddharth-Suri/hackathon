@@ -15,21 +15,24 @@ export const TopBar = memo(() => {
                 }`}
             >
                 <div className="flex gap-5 p-2 ">
-                    <div
-                        className="pl-4 pr-4 p-2 cursor-pointer hover:text-yellow-400 hover:underline"
-                        onClick={() => {
-                            navigate("/");
-                        }}
-                    >
+                    <div className="pl-4 pr-4 p-2 cursor-pointer hover:text-yellow-400 hover:underline">
                         Home
                     </div>
-                    <div className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline">
-                        Workout
+                    <div
+                        onClick={() => {
+                            navigate("/questions");
+                        }}
+                        className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline"
+                    >
+                        Questions
                     </div>
-                    <div className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline">
-                        Diet
-                    </div>
-                    <div className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline">
+
+                    <div
+                        className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline"
+                        onClick={() => {
+                            navigate("/pose");
+                        }}
+                    >
                         Pose
                     </div>
                 </div>
