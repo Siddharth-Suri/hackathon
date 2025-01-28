@@ -8,12 +8,17 @@ import { Home } from "./components/Home";
 import { TopBar } from "./components/TopBar";
 import { RecoilRoot } from "recoil";
 import ChatBot from "./components/ChatBot";
+import { LandingPage } from "./components/LandingPage";
 function App() {
     return (
         <RecoilRoot>
             <BrowserRouter>
                 <TopBar></TopBar>
                 <Routes>
+                    <Route
+                        path="/home"
+                        element={<LandingPage></LandingPage>}
+                    ></Route>
                     <Route path="/pose" element={<Home></Home>}></Route>
                     <Route
                         path="/questions"

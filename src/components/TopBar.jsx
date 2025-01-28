@@ -15,7 +15,12 @@ export const TopBar = memo(() => {
                 }`}
             >
                 <div className="flex gap-5 p-2 ">
-                    <div className="pl-4 pr-4 p-2 cursor-pointer hover:text-yellow-400 hover:underline">
+                    <div
+                        className="pl-4 pr-4 p-2 cursor-pointer hover:text-yellow-400 hover:underline"
+                        onClick={() => {
+                            navigate("/home");
+                        }}
+                    >
                         Home
                     </div>
                     <div
