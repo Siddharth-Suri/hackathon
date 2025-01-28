@@ -3,8 +3,11 @@ import * as tf from "@tensorflow/tfjs";
 import "@tensorflow/tfjs-backend-webgl";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import p5 from "p5";
+import { useRecoilValue } from "recoil";
+import { colourTheme } from "../cart/Theme";
 
-export const Home = () => {
+export const Home = ({}) => {
+    const currentTheme = useRecoilValue(colourTheme);
     const canvasRef = useRef(null);
     const videoRef = useRef(null);
     let detector = null;
@@ -128,7 +131,6 @@ export const Home = () => {
                             rightWrist.y
                         );
 
-                        // Push-up detection based on elbow angle
                         if (angleLeft < 90 && angleRight < 90) {
                             isPushUpDown = true;
                         } else if (
@@ -178,7 +180,6 @@ export const Home = () => {
                             rightAnkle.y
                         );
 
-                        // Squat detection based on knee angle
                         if (angleLeftKnee < 150 && angleRightKnee < 150) {
                             isSquatDown = true;
                         } else if (
@@ -193,7 +194,6 @@ export const Home = () => {
                 }
             };
 
-            // Calculate angle between three points (in degrees)
             const calculateAngle = (x1, y1, x2, y2, x3, y3) => {
                 const angle =
                     Math.atan2(y3 - y2, x3 - x2) - Math.atan2(y1 - y2, x1 - x2);
@@ -240,7 +240,21 @@ export const Home = () => {
         };
     }, []);
 
-    return <div ref={canvasRef}></div>;
+    return (
+        <div
+            className={`w-full h-dvh flex p-3 font-mono justify-center items-start text-xl gap-2 font-semibold shadow-md ${
+                currentTheme === "dark"
+                    ? "bg-black text-white"
+                    : "bg-amber-50 text-black"
+            }`}
+        >
+            <div className="flex flex-col items-center gap-4 hover:shadow-amber-800">
+                <h1 className="text-xl">Form Detection</h1>
+
+                <div ref={canvasRef}></div>
+            </div>
+        </div>
+    );
 };
 
 export default Home;

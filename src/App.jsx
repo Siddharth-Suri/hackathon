@@ -12,7 +12,7 @@ function App() {
             <BrowserRouter>
                 <TopBar></TopBar>
                 <Routes>
-                    <Route path="/home" element={<Home></Home>}></Route>
+                    <Route path="/" element={<Home></Home>}></Route>
                 </Routes>
             </BrowserRouter>
         </RecoilRoot>
