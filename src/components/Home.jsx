@@ -31,7 +31,6 @@ export const Home = () => {
                 await tf.setBackend("webgl");
                 console.log("Using TensorFlow backend:", tf.getBackend());
 
-                // Set canvas size
                 p.createCanvas(640, 480);
                 video = p.createCapture(p.VIDEO);
                 video.size(640, 480);
@@ -52,17 +51,6 @@ export const Home = () => {
                 } catch (error) {
                     console.error("Error loading MoveNet model:", error);
                 }
-
-                // Resize canvas to match window size
-                const handleResize = () => {
-                    p.resizeCanvas(window.innerWidth, window.innerHeight);
-                };
-                window.addEventListener("resize", handleResize);
-
-                // Cleanup
-                return () => {
-                    window.removeEventListener("resize", handleResize);
-                };
             };
 
             p.draw = () => {
@@ -291,7 +279,7 @@ export const Home = () => {
 
     return (
         <div
-            className={`grid grid-rows-1 grid-cols-1 p-3 font-mono text-xl gap-4 font-semibold shadow-md ${
+            className={`grid p-3 font-mono text-xl gap-4 font-semibold shadow-md ${
                 currentTheme === "dark"
                     ? "bg-black text-white"
                     : "bg-amber-50 text-black"

@@ -16,7 +16,7 @@ function App() {
                 <TopBar></TopBar>
                 <Routes>
                     <Route
-                        path="/home"
+                        path="/"
                         element={<LandingPage></LandingPage>}
                     ></Route>
                     <Route path="/pose" element={<Home></Home>}></Route>
