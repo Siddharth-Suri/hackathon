@@ -276,18 +276,24 @@ export const Home = () => {
             p5Instance.remove();
         };
     }, []);
-
     return (
         <div
-            className={`grid p-3 font-mono text-xl gap-4 font-semibold shadow-md ${
+            className={`grid p-3 h-dvh font-mono text-xl gap-4 font-semibold shadow-md ${
                 currentTheme === "dark"
                     ? "bg-black text-white"
                     : "bg-amber-50 text-black"
-            }`}
+            } grid-rows-[auto_1fr]`} // Define grid structure with two rows: one for header and one for the content
         >
             <h1 className="text-xl text-center font-bold">Form Detection</h1>
-            <div className="flex justify-center items-center">
-                <div ref={canvasRef}></div>
+            <div className="relative w-full h-[480px]">
+                <div
+                    ref={canvasRef}
+                    className="absolute -top-95 left-95 w-full h-full"
+                    style={{
+                        zIndex: 10, // Ensure canvas stays on top
+                        pointerEvents: "none", // Prevent blocking interactions with other elements
+                    }}
+                ></div>
             </div>
         </div>
     );

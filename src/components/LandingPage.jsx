@@ -1,6 +1,5 @@
 import { useRecoilValue } from "recoil";
 import { colourTheme } from "../cart/Theme";
-import { CardComponent } from "./CardComponent";
 export const LandingPage = () => {
     const currentTheme = useRecoilValue(colourTheme);
     return (
@@ -11,9 +10,9 @@ export const LandingPage = () => {
                     : "bg-amber-50 text-black"
             }`}
         >
-            <div>
-                <CardComponent></CardComponent>
-            </div>
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
     );
 };

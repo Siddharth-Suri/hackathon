@@ -30,34 +30,52 @@ function WorkoutGenerator() {
             injury,
             intensity,
         };
-
         const prompt = `
-      Create a personalized workout plan based on the following information:
-      Goal: ${goal},
-      Fitness Level: ${level},
-      Duration: ${duration} minutes,
-      Workout Type: ${workoutType},
-      Frequency: ${frequency} times per week,
-      Equipment: ${equipment},
-      Injury: ${injury || "None"},
-      Intensity: ${intensity}.
-      
-      Provide a weekly workout schedule with each day (e.g., Monday, Tuesday, etc.), followed by the exercises for that day.
-      Make sure the output is structured as a table with clear borders and proper formatting. Here’s how you should structure the table:
+Create a personalized workout plan based on the following information:
 
-| Day       | Exercises                                           |
-|-----------|-----------------------------------------------------|
-| Monday    | Exercise 1, Exercise 2, Exercise 3                 |
-| Tuesday   | Exercise 1, Exercise 2, Exercise 3                 |
-| Wednesday | Exercise 1, Exercise 2, Exercise 3                 |
-| Thursday  | Exercise 1, Exercise 2, Exercise 3                 |
-| Friday    | Exercise 1, Exercise 2, Exercise 3                 |
-| Saturday  | Exercise 1, Exercise 2, Exercise 3                 |
-| Sunday    | Exercise 1, Exercise 2, Exercise 3                 |
+- **Goal**: ${goal}
+- **Fitness Level**: ${level}
+- **Duration**: ${duration} minutes
+- **Workout Type**: ${workoutType}
+- **Frequency**: ${frequency} times per week
+- **Equipment**: ${equipment}
+- **Injury**: ${injury ? injury : "None"}
+- **Intensity**: ${intensity}
 
-Do not include notes for each exercise. Do not provide any introduction.
-    `;
+---
 
+Provide a weekly workout schedule with each day (e.g., Monday, Tuesday, etc.), followed by the exercises for that day.
+
+### Format the exercises as follows:
+
+**Day: Monday**
+| Name                    |          Sets           |          Reps           |           Rest           |
+|-------------------------|-------------------------|-------------------------|--------------------------|
+| Flat Bench Press        |            3           |           10            |           30s           |
+| Dips                    |            4           |           12            |           1min          |
+| Squats                  |            3           |           10            |           45s           |
+
+**Day: Tuesday**
+| Name                    |          Sets           |          Reps           |           Rest           |
+|-------------------------|-------------------------|-------------------------|--------------------------|
+| Deadlifts               |            3           |            8            |           1min          |
+| Pull-ups                |            4           |            6            |           30s           |
+| Lunges                  |            3           |           10            |           45s           |
+
+---
+
+Include any necessary modifications for injuries or limitations.
+
+**Key Requirements:**
+- Keep the format consistent for each day of the week.
+- The table should have **clear borders** separating the columns and rows.
+- Provide the workout plan for **one week only**.
+- **Do not** include notes for each exercise.
+-Include line breaks after every each days and also wherever needed 
+-Add a lot more space between of coloums so that it looks furnished when displayed as a table 
+- Add a lot more line breaks in between and make it so the table is spread through
+
+`;
         setLoading(true);
 
         try {
@@ -230,7 +248,11 @@ Do not include notes for each exercise. Do not provide any introduction.
                     </h3>
                     <div
                         dangerouslySetInnerHTML={{ __html: response }}
-                        className="p-4 bg-gray-100 rounded-lg shadow-md"
+                        className={`${
+                            currentTheme === "dark"
+                                ? "bg-black  text-white"
+                                : "bg-amber-50 text-black"
+                        }`}
                         style={{ overflowX: "auto" }}
                     />
                 </div>
