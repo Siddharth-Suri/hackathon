@@ -25,11 +25,19 @@ export const TopBar = memo(() => {
                     </div>
                     <div
                         onClick={() => {
-                            navigate("/questions");
+                            navigate("/workout");
                         }}
                         className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline"
                     >
-                        Questions
+                        Workout
+                    </div>
+                    <div
+                        onClick={() => {
+                            navigate("/meals");
+                        }}
+                        className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline"
+                    >
+                        Diet
                     </div>
 
                     <div

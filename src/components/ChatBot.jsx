@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useRecoilValue } from "recoil";
 import { colourTheme } from "../cart/Theme";
-import { marked } from "marked"; // Correct import for marked
 
 function WorkoutGenerator() {
     const currentTheme = useRecoilValue(colourTheme);
@@ -46,49 +45,91 @@ Create a personalized workout plan based on the following information:
 
 Provide a weekly workout schedule with each day (e.g., Monday, Tuesday, etc.), followed by the exercises for that day.
 
-### Format the exercises as follows:
+### Format the exercises in HTML tables:
 
-**Day: Monday**
-| Name                    |          Sets           |          Reps           |           Rest           |
-|-------------------------|-------------------------|-------------------------|--------------------------|
-| Flat Bench Press        |            3           |           10            |           30s           |
-| Dips                    |            4           |           12            |           1min          |
-| Squats                  |            3           |           10            |           45s           |
+Day: Monday
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Sets</th>
+    <th>Reps</th>
+    <th>Rest</th>
+  </tr>
+  <tr>
+    <td>Flat Bench Press</td>
+    <td>3</td>
+    <td>10</td>
+    <td>30s</td>
+  </tr>
+  <tr>
+    <td>Dips</td>
+    <td>4</td>
+    <td>12</td>
+    <td>1min</td>
+  </tr>
+  <tr>
+    <td>Squats</td>
+    <td>3</td>
+    <td>10</td>
+    <td>45s</td>
+  </tr>
+</table>
 
-**Day: Tuesday**
-| Name                    |          Sets           |          Reps           |           Rest           |
-|-------------------------|-------------------------|-------------------------|--------------------------|
-| Deadlifts               |            3           |            8            |           1min          |
-| Pull-ups                |            4           |            6            |           30s           |
-| Lunges                  |            3           |           10            |           45s           |
-
----
+Day: Tuesday
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Sets</th>
+    <th>Reps</th>
+    <th>Rest</th>
+  </tr>
+  <tr>
+    <td>Deadlifts</td>
+    <td>3</td>
+    <td>8</td>
+    <td>1min</td>
+  </tr>
+  <tr>
+    <td>Pull-ups</td>
+    <td>4</td>
+    <td>6</td>
+    <td>30s</td>
+  </tr>
+  <tr>
+    <td>Lunges</td>
+    <td>3</td>
+    <td>10</td>
+    <td>45s</td>
+  </tr>
+</table>
 
 Include any necessary modifications for injuries or limitations.
 
 **Key Requirements:**
-- Keep the format consistent for each day of the week.
-- The table should have **clear borders** separating the columns and rows.
-- Provide the workout plan for **one week only**.
-- **Do not** include notes for each exercise.
--Include line breaks after every each days and also wherever needed 
--Add a lot more space between of coloums so that it looks furnished when displayed as a table 
-- Add a lot more line breaks in between and make it so the table is spread through
-
+- Use HTML tables with clear borders separating the columns and rows.
+- Provide the workout plan for one week only.
+- Provide workout plan for every day independtly
+- Do not include notes for each exercise.
+- Make sure there is no startin summary 
+- Start with workout routine directly 
+- Make sure there is a line break at the starting of workout routine before monday
+- Include line breaks after every day and wherever needed.
+- Add more space between columns so the table looks furnished when displayed.
+- Add plenty of line breaks and ensure the table is spread out.
 `;
+
         setLoading(true);
 
         try {
             const genAI = new GoogleGenerativeAI(
                 "AIzaSyDWv1_h6Zt9T_NKcND0J3OJIintKYmkZ4s"
-            );
+            ); //add api key
             const model = genAI.getGenerativeModel({
                 model: "gemini-1.5-flash",
             });
             const result = await model.generateContent(prompt);
-            const text = await result.response.text();
-            const formattedText = marked(text);
-            setResponse(formattedText);
+            const text = await result.response.text(); // Direct HTML response from Gemini
+            setResponse(text); // Directly set the HTML response
             setLoading(false);
         } catch (error) {
             console.error("Error fetching workout plan:", error);
@@ -231,29 +272,26 @@ Include any necessary modifications for injuries or limitations.
 
                 <button
                     type="submit"
-                    disabled={loading}
-                    className="w-full sm:w-auto px-6 py-3 mt-4 bg-blue-500 text-white font-semibold rounded-lg transition-transform transform hover:scale-105 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                    {loading
-                        ? "Generating Workout Plan..."
-                        : "Generate Workout Plan"}
+                    {loading ? "Generating..." : "Generate Workout Plan"}
                 </button>
             </form>
 
-            {/* Display Response */}
-            {response && (
-                <div className="mt-6 w-full sm:w-3/4 space-y-4">
-                    <h3 className="text-2xl font-semibold mb-4">
-                        Your Personalized Workout Plan:
+            {response && !loading && (
+                <div
+                    className={`mt-6 w-full sm:w-3/4 p-6  rounded-lg shadow-xl ${
+                        currentTheme === "dark"
+                            ? "bg-gray-600 transition-all ease-in duration-50 text-white hover:bg-slate-700 cursor-pointer hover:shadow-white"
+                            : "bg-amber-200 text-black transition-all ease-in duration-50 hover:bg-amber-300 cursor-pointer hover:shadow-orange-950"
+                    }`}
+                >
+                    <h3 className="text-xl font-semibold mb-4">
+                        Your Workout Plan
                     </h3>
                     <div
+                        className="workout-plan"
                         dangerouslySetInnerHTML={{ __html: response }}
-                        className={`${
-                            currentTheme === "dark"
-                                ? "bg-black  text-white"
-                                : "bg-amber-50 text-black"
-                        }`}
-                        style={{ overflowX: "auto" }}
                     />
                 </div>
             )}
