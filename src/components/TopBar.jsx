@@ -23,13 +23,29 @@ export const TopBar = memo(() => {
                     >
                         Home
                     </div>
-                    <div className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline">
+                    <div
+                        onClick={() => {
+                            navigate("/workout");
+                        }}
+                        className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline"
+                    >
                         Workout
                     </div>
-                    <div className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline">
+                    <div
+                        onClick={() => {
+                            navigate("/meals");
+                        }}
+                        className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline"
+                    >
                         Diet
                     </div>
-                    <div className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline">
+
+                    <div
+                        className="p-2 pl-4 pr-4 cursor-pointer hover:text-yellow-400 hover:underline"
+                        onClick={() => {
+                            navigate("/pose");
+                        }}
+                    >
                         Pose
                     </div>
                 </div>
